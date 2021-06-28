@@ -19,11 +19,11 @@ const emptyList = second;
 
 const isEmptyList = compose(isFunction)(left);
 
-const push = val => list => isEmptyList(list)
+const append = val => list => isEmptyList(list)
   ? makePair(val)(emptyList)
-  : makePair(left(list))(push(val)(right(list)));
+  : makePair(left(list))(append(val)(right(list)));
 
-const pop = val => list => isEmptyList(list)
+const prepend = val => list => isEmptyList(list)
   ? makePair(val)(emptyList)
   : makePair(val)(list);
 
@@ -34,22 +34,25 @@ const foreach = f => list => unless(isEmptyList)(
 const map = f => list => {
   const inner = accList => innerList => isEmptyList(innerList)
     ? accList
-    : inner(push(f(left(innerList)))(accList))(right(innerList));
+    : inner(append(f(left(innerList)))(accList))(right(innerList));
   return inner(emptyList)(list);
 };
 
 const repeat = (list) => (n) => (max) => equals(max)(n)
-  ? push(n)(list)
-  : repeat(push(n)(list))(inc(n))(max);
+  ? append(n)(list)
+  : repeat(append(n)(list))(inc(n))(max);
 
 const range = (min) => (max) => repeat(emptyList)(min)(max);
 
-const reverse = accList => list => isEmptyList(list)
-  ? accList
-  : reverse(pop(left(list))(accList))(right(list));
+const reverse = list => {
+  const inner = accList => innerList => isEmptyList(innerList)
+    ? accList
+    : inner(prepend(left(innerList))(accList))(right(innerList));
+  return inner(emptyList)(list);
+};
 
 // main program
 const listRanged = range(1)(10);
 const listSquared = map(square)(listRanged);
-const listReversed = reverse(emptyList)(listSquared);
+const listReversed = reverse(listSquared);
 foreach(console.log)(listReversed);
