@@ -1,18 +1,19 @@
 // utils
 const identity = a => a;
-const equals = a => b => b === a;
 const makePair = a => b => f => f(a)(b);
 const first = a => _ => a;
 const second = _ => b => b;
 const left = list => list(first);
 const right = list => list(second);
-const isFunction = f => typeof(f) === 'function';
 const compose = f => g => a => f(g(a));
-const add = a => b => b + a;
-const inc = add(1);
-const square = n => n * n;
 const ifElse = cond => f => g => a => cond(a) ? f(a) : g(a);
 const unless = cond => f => ifElse(cond)(identity)(f);
+
+const equals = a => b => b === a;
+const add = a => b => b + a;
+const square = n => n * n;
+const isFunction = f => typeof(f) === 'function';
+const inc = add(1);
 
 // lists
 const emptyList = second;
